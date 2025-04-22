@@ -1,109 +1,60 @@
-// App.jsx
-import React, { useState } from "react";
-import MovieList from "./components/MovieList";
-import Filter from "./components/Filter";
+import React, { useState } from 'react';
+import MovieList from './components/MovieList';
+import Filter from './components/Filter';
+import './App.css';
 
-const App = () => {
+function App() {
+  // Liste initiale des films (peut être vide)
   const [movies, setMovies] = useState([
     {
-      title: "Inception",
-      description: "Un voleur qui entre dans les rêves pour voler des secrets.",
-      posterURL: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
-      rating: 9
+      title: "Superman",
+      description: "Un reboot audacieux du célèbre super-héros, réalisé par James Gunn. Ce film marque une nouvelle ère pour le DC Universe, avec David Corenswet dans le rôle de Superman et Rachel Brosnahan en Lois Lane.",
+      posterURL: "https://images.prismic.io/batman-escape/ZvvvWLVsGrYSwOCQ_Superman-legacy.webp?auto=format,compress",
+      rating: 4.8
+    },
+    {
+      title: "F1",
+      description: "Brad Pitt incarne un pilote de Formule 1 vétéran qui fait son retour sur les circuits. Ce film promet des scènes de course spectaculaires et une immersion totale dans l'univers de la F1.",
+      posterURL: "https://ai.dimaster.io/assets/cache/1920/960/media/Artikel/240713-F1-Movie-Brad-Pitt-2025/Apple-F1-Movie-Brad-Pitt-8.jpg",
+      rating: 4.6
     },
     {
       title: "Interstellar",
-      description: "Un voyage dans l’espace pour sauver l’humanité.",
+      description: "Des explorateurs partent à la recherche d'un nouveau foyer pour l'humanité.",
       posterURL: "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
-      rating: 8
-    }
+      rating: 4.7,
+    },
   ]);
 
-  const [titleFilter, setTitleFilter] = useState("");
-  const [ratingFilter, setRatingFilter] = useState("");
+  // État pour gérer les filtres
+  const [filterTitle, setFilterTitle] = useState('');
+  const [filterRating, setFilterRating] = useState(0);
 
-  const [newMovie, setNewMovie] = useState({
-    title: "",
-    description: "",
-    posterURL: "",
-    rating: ""
-  });
-
-  // Filtrage des films
-  const filteredMovies = movies.filter(
-    (movie) =>
-      movie.title.toLowerCase().includes(titleFilter.toLowerCase()) &&
-      (ratingFilter === "" || movie.rating >= parseFloat(ratingFilter))
-  );
-
-  const handleAddMovie = () => {
-    if (
-      newMovie.title &&
-      newMovie.description &&
-      newMovie.posterURL &&
-      newMovie.rating
-    ) {
-      setMovies([...movies, { ...newMovie, rating: parseFloat(newMovie.rating) }]);
-      setNewMovie({ title: "", description: "", posterURL: "", rating: "" });
-    } else {
-      alert("Veuillez remplir tous les champs !");
-    }
+  // Fonction pour ajouter un nouveau film
+  const handleAddMovie = (newMovie) => {
+    setMovies([...movies, newMovie]);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center mb-4 text-blue-700">🎬 Mon Cinéma</h1>
-
-      <Filter
-        titleFilter={titleFilter}
-        setTitleFilter={setTitleFilter}
-        ratingFilter={ratingFilter}
-        setRatingFilter={setRatingFilter}
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white font-sans">
+      <h1 className="text-4xl font-bold text-center py-8 text-red-600 animate-pulse">🎬 CinéMAX</h1>
+      {/* Composant filtre */}
+      <Filter 
+        setFilterTitle={setFilterTitle} 
+        setFilterRating={setFilterRating} 
+        onAddMovie={handleAddMovie} 
       />
 
-      <div className="max-w-xl mx-auto my-4 p-4 bg-white rounded shadow-md space-y-3">
-        <h2 className="text-xl font-bold text-gray-800">Ajouter un film</h2>
-        <input
-          type="text"
-          placeholder="Titre"
-          value={newMovie.title}
-          onChange={(e) => setNewMovie({ ...newMovie, title: e.target.value })}
-          className="border p-2 w-full rounded"
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          value={newMovie.description}
-          onChange={(e) => setNewMovie({ ...newMovie, description: e.target.value })}
-          className="border p-2 w-full rounded"
-        />
-        <input
-          type="text"
-          placeholder="URL de l’affiche"
-          value={newMovie.posterURL}
-          onChange={(e) => setNewMovie({ ...newMovie, posterURL: e.target.value })}
-          className="border p-2 w-full rounded"
-        />
-        <input
-          type="number"
-          placeholder="Note"
-          value={newMovie.rating}
-          onChange={(e) => setNewMovie({ ...newMovie, rating: e.target.value })}
-          className="border p-2 w-full rounded"
-          min="0"
-          max="10"
-        />
-        <button
-          onClick={handleAddMovie}
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
-        >
-          Ajouter
-        </button>
-      </div>
-
-      <MovieList movies={filteredMovies} />
+      {/* Liste des films filtrés */}
+      <MovieList 
+        movies={movies.filter(
+          (movie) =>
+            movie.title.toLowerCase().includes(filterTitle.toLowerCase()) &&
+            movie.rating >= filterRating
+        )} 
+      />
     </div>
   );
-};
+}
 
 export default App;

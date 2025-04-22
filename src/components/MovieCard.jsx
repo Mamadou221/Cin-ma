@@ -1,15 +1,23 @@
 // components/MovieCard.jsx
-import React from "react";
+import React from 'react';
+import { motion } from 'framer-motion';
 
-const MovieCard = ({ movie }) => {
+function MovieCard({ movie }) {
   return (
-    <div className="bg-white shadow-md rounded p-4 w-full sm:w-[300px]">
-      <img src={movie.posterURL} alt={movie.title} className="h-48 w-full object-cover rounded mb-2" />
-      <h2 className="text-xl font-bold">{movie.title}</h2>
-      <p className="text-sm text-gray-700 mb-2">{movie.description}</p>
-      <p className="text-yellow-500 font-semibold">Note : {movie.rating}/10</p>
-    </div>
+    <motion.div 
+      initial={{ opacity: 0, y: 50 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.5 }}
+      className="bg-white bg-opacity-10 border border-white border-opacity-20 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition-transform cursor-pointer"
+    >
+      <img src={movie.posterURL} alt={movie.title} className="w-full h-64 object-cover" />
+      <div className="p-4">
+        <h2 className="text-xl font-bold mb-2 text-red-500">{movie.title}</h2>
+        <p className="text-sm text-gray-300 mb-2">{movie.description}</p>
+        <span className="text-yellow-400 font-semibold">⭐ {movie.rating}/5</span>
+      </div>
+    </motion.div>
   );
-};
+}
 
 export default MovieCard;
